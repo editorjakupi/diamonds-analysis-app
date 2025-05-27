@@ -1,3 +1,7 @@
+## 🚀 Live Demo
+
+[Öppna Diamonds Analysis App på Streamlit Cloud](https://diamonds-analysis-app-uae8lqradky68cntkehd8j.streamlit.app/)
+
 # Diamonds Analysis App
 
 En interaktiv Streamlit-app för analys av diamanter, utvecklad för Guldfynd.
