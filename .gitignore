@@ -48,4 +48,17 @@ Thumbs.db
 *.log
 .coverage
 htmlcov/
-.pytest_cache/ 
+.pytest_cache/
+
+# Data files (excluding diamonds dataset)
+*.xlsx
+*.xls
+*.db
+*.sqlite3
+
+# Streamlit
+.streamlit/
+
+# Keep diamonds dataset
+!diamonds_dataset/
+!diamonds_dataset/diamonds.csv 

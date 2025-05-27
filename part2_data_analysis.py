@@ -22,7 +22,9 @@ def load_data():
     Returns:
         pandas.DataFrame: The loaded diamonds dataset
     """
-    df = pd.read_csv('../diamonds/diamonds.csv')
+    # Use Path to handle file paths in a cross-platform way
+    data_path = Path(__file__).parent / 'diamonds_dataset' / 'diamonds.csv'
+    df = pd.read_csv(data_path)
     
     # Remove rows where any of the dimensions x, y, or z are 0 (physically impossible for a diamond)
     zero_mask = (df[['x', 'y', 'z']] == 0).any(axis=1)

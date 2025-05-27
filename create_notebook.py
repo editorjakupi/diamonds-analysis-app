@@ -338,7 +338,7 @@ notebook = {
                 "import plotly.graph_objects as go\n",
                 "\n",
                 "# Läs in diamonds-datan\n",
-                "df = pd.read_csv('../diamonds/diamonds.csv')\n",
+                "df = pd.read_csv('diamonds_dataset/diamonds.csv')\n",
                 "# Ta bort rader där någon av dimensionerna x, y, z är 0\n",
                 "zero_mask = (df[['x', 'y', 'z']] == 0).any(axis=1)\n",
                 "df = df[~zero_mask].copy()\n",
