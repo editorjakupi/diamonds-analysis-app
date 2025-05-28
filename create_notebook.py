@@ -28,6 +28,26 @@ notebook = {
                 "## Del 1 - Teoretiska frågor och Python-övningar <a name=\"del-1\"></a>"
             ]
         },
+        # Table of contents for Del 1
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "### Innehåll Del 1\n",
+                "1. [Tuple vs List](#tuple-vs-list)\n",
+                "2. [Funktioner](#funktioner)\n",
+                "3. [Klasser](#klasser)\n",
+                "4. [Streamlit](#streamlit)\n",
+                "5. [BankAccount klass](#bankaccount-klass)\n",
+                "6. [Vokalräknare](#vokalr%C3%A4knare)\n",
+                "7. [Gemensamma element](#gemensamma-element)\n",
+                "8. [Storkar och barnafödsel](#storkar-och-barnaf%C3%B6dsel)\n",
+                "9. [Medelvärde vs Median](#medelv%C3%A4rde-vs-median)\n",
+                "10. [Cirkeldiagram](#cirkeldiagram)\n",
+                "11. [Linjediagram](#linjediagram)\n",
+                "12. [Lådagram](#l%C3%A5dagram)\n"
+            ]
+        },
         # Tuple vs List explanation
         {
             "cell_type": "markdown",
@@ -245,6 +265,27 @@ notebook = {
             "metadata": {},
             "source": [
                 "## Del 2 - Dataanalys av Diamonds Dataset <a name=\"del-2\"></a>"
+            ]
+        },
+        # Table of contents for Del 2
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "### Innehåll Del 2\n",
+                "1. [Bakgrund](#bakgrund)\n",
+                "2. [Om Diamanter](#om-diamanter)\n",
+                "3. [Förberedelser](#f%C3%B6rberedelser)\n",
+                "4. [Grundläggande Statistik](#1-grundl%C3%A4ggande-statistik)\n",
+                "5. [Prisanalys](#2-prisanalys)\n",
+                "6. [Kvalitetsattribut (Cut, Color, Clarity)](#3-kvalitetsattribut-cut-color-clarity)\n",
+                "7. [Prisfördelning per Kvalitetsattribut](#4-prisf%C3%B6rdelning-per-kvalitetsattribut)\n",
+                "8. [Samband mellan Vikt och Pris](#5-samband-mellan-vikt-och-pris)\n",
+                "9. [Korrelationer](#6-korrelationer)\n",
+                "10. [Extremvärden och Saknade Värden](#7-extremv%C3%A4rden-och-saknade-v%C3%A4rden)\n",
+                "11. [Hypotesprövningar](#8-hypotespr%C3%B6vningar)\n",
+                "12. [Beslutsstöd: Ska vi köpa diamanten?](#9-beslutsst%C3%B6d-ska-vi-k%C3%B6pa-diamanten)\n",
+                "13. [Executive Summary och Data Storytelling](#10-executive-summary-och-data-storytelling)\n"
             ]
         },
         # Bakgrund
