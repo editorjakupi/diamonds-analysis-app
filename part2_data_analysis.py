@@ -43,15 +43,39 @@ def analyze_diamonds():
     
     # Display title and introduction
     st.title("💎 Diamonds Analysis for Guldfynd")
+    
+    # --- Innehållsförteckning ---
+    st.markdown("""
+    <h3>Innehållsförteckning</h3>
+    <ul>
+      <li><a href="#bakgrund">1. Bakgrund</a></li>
+      <li><a href="#om-diamanter">2. Om diamanter</a></li>
+      <li><a href="#grundlaggande-statistik">3. Grundläggande statistik</a></li>
+      <li><a href="#prisanalys">4. Prisanalys</a></li>
+      <li><a href="#kvalitetsattribut">5. Kvalitetsattribut</a></li>
+      <li><a href="#prisfordelning-per-kvalitetsattribut">6. Prisfördelning per kvalitetsattribut</a></li>
+      <li><a href="#samband-mellan-vikt-och-pris">7. Samband mellan vikt och pris</a></li>
+      <li><a href="#korrelationer">8. Korrelationer</a></li>
+      <li><a href="#extremvarden-och-saknade-varden">9. Extremvärden och saknade värden</a></li>
+      <li><a href="#hypotesprovningar">10. Hypotesprövningar</a></li>
+      <li><a href="#interaktiv-analys">11. Interaktiv analys</a></li>
+      <li><a href="#beslutsstod">12. Beslutsstöd: Ska vi köpa diamanten?</a></li>
+      <li><a href="#executive-summary">13. Executive summary och data storytelling</a></li>
+    </ul>
+    <hr>
+    """, unsafe_allow_html=True)
+
+    # --- Sektioner med HTML-ankare ---
+    st.markdown('<a name="bakgrund"></a>', unsafe_allow_html=True)
     st.markdown("""
     ### Bakgrund
     Guldfynd överväger att expandera sitt sortiment med diamanter. 
     Denna analys hjälper till att förstå diamanternas egenskaper och marknadsmöjligheter.
     """)
 
-    # Add diamond education section
+    st.markdown('<a name="om-diamanter"></a>', unsafe_allow_html=True)
     st.markdown("""
-    ### Om Diamanter
+    ### Om diamanter
     
     Diamanter är en av världens mest värdefulla ädelstenar, bildade under extremt högt tryck och temperatur djupt under jordens yta. 
     De består av kolatomer i en kristallstruktur och är kända för sin exceptionella hårdhet och briljans.
@@ -100,8 +124,8 @@ def analyze_diamonds():
     Denna kunskap är viktig för att förstå analysen och dess affärsmässiga implikationer.
     """)
 
-    # 1. Basic Statistics Section
-    st.header("1. Grundläggande Statistik")
+    st.markdown('<a name="grundlaggande-statistik"></a>', unsafe_allow_html=True)
+    st.header("3. Grundläggande statistik")
     st.markdown("Syfte: Ge en överblick över datasetets storlek och grundläggande egenskaper.")
     
     # Create three columns for metrics
@@ -113,8 +137,8 @@ def analyze_diamonds():
     with col3:
         st.metric("Medelvikt", f"{df['carat'].mean():.2f} karat")  # Display average carat weight
 
-    # 2. Price Analysis Section
-    st.header("2. Prisanalys")
+    st.markdown('<a name="prisanalys"></a>', unsafe_allow_html=True)
+    st.header("4. Prisanalys")
     st.markdown("Syfte: Undersöka prisfördelningen och identifiera eventuella extremvärden.")
     
     # Create price histogram
@@ -129,8 +153,8 @@ def analyze_diamonds():
     st.markdown("**Insikt:** Priserna är koncentrerade till lägre nivåer, men det finns en lång svans av dyra diamanter.")
     st.markdown("**Affärsmässig tolkning:** Guldfynd kan erbjuda både prisvärda och exklusiva diamanter för att möta olika kunders behov.")
 
-    # 3. Quality Attributes Section
-    st.header("3. Kvalitetsattribut")
+    st.markdown('<a name="kvalitetsattribut"></a>', unsafe_allow_html=True)
+    st.header("5. Kvalitetsattribut")
     st.markdown("Syfte: Undersöka fördelningen av slipning, färg och klarhet. Alla är sorterade från bäst till sämst.")
     
     # Define the order of categories from best to worst
@@ -192,8 +216,8 @@ def analyze_diamonds():
         st.markdown("**Insikt:** Små diamanter är vanligast, men stora diamanter är mer sällsynta och värdefulla.")
         st.markdown("**Affärsmässig tolkning:** Guldfynd kan erbjuda ett brett sortiment av små diamanter för volymförsäljning och marknadsföra större stenar som exklusiva och sällsynta.")
 
-    # 4. Price Distribution by Quality Attributes
-    st.header("4. Prisfördelning per Kvalitetsattribut")
+    st.markdown('<a name="prisfordelning-per-kvalitetsattribut"></a>', unsafe_allow_html=True)
+    st.header("6. Prisfördelning per kvalitetsattribut")
     st.markdown("Syfte: Jämföra prisnivåer mellan olika kvalitetsklasser.")
     
     # Replace boxplot for price per cut with grouped bar chart (mean and median)
@@ -280,8 +304,8 @@ def analyze_diamonds():
     st.markdown("**Insikt:** De klarhetsgrader som har högst pris har också högst vikt, vilket visar att det är vikten som driver priset snarare än klarhetsgraden.")
     st.markdown("**Affärsmässig tolkning:** Guldfynd bör utgå från att det är vikten som driver priset i dessa segment. Klarhetsgrad kan användas för att skapa produktsegment, men prissättningen bör i första hand baseras på vikt.")
 
-    # 5. Samband mellan Carat och Pris per Cut, Color, Clarity
-    st.header("5. Samband mellan Vikt och Pris")
+    st.markdown('<a name="samband-mellan-vikt-och-pris"></a>', unsafe_allow_html=True)
+    st.header("7. Samband mellan vikt och pris")
     st.markdown("Syfte: Undersöka hur vikt och pris samvarierar beroende på kvalitet.")
     # Scatterplot för cut
     fig_scatter_cut = px.scatter(df, x='carat', y='price', color='cut',
@@ -317,8 +341,8 @@ def analyze_diamonds():
     st.markdown("**Insikt:** Premiumklarhet i stora stenar ger högst pris.")
     st.markdown("**Affärsmässig tolkning:** Guldfynd kan ta ut högre pris för stora diamanter med hög klarhet och rikta dem till exklusiva kunder.")
 
-    # 6. Korrelationer
-    st.header("6. Korrelationer")
+    st.markdown('<a name="korrelationer"></a>', unsafe_allow_html=True)
+    st.header("8. Korrelationer")
     st.markdown("Syfte: Visa korrelationer mellan alla numeriska variabler i datasetet för att förstå sambanden mellan olika egenskaper.")
     
     # Create correlation matrix for numerical columns
@@ -377,8 +401,8 @@ def analyze_diamonds():
     st.markdown("**Insikt:** Diamanter med större längd tenderar att vara högre.")
     st.markdown("**Affärsmässig tolkning:** Guldfynd kan använda detta samband för att identifiera proportionerliga och välformade diamanter.")
 
-    # 7. Extremvärden och Saknade Värden
-    st.header("7. Extremvärden och Saknade Värden")
+    st.markdown('<a name="extremvarden-och-saknade-varden"></a>', unsafe_allow_html=True)
+    st.header("9. Extremvärden och saknade värden")
     st.markdown("Syfte: Identifiera och analysera extremvärden och saknade värden i datasetet.")
     st.info("""
 Datakvalitet: Datasetet innehåller extremvärden och saknade värden som kan påverka analysen. Det är viktigt att identifiera och hantera dessa för att säkerställa tillförlitliga resultat. Notera att 0-värden i x, y, z har tagits bort eftersom de är fysiskt omöjliga för en diamant. En diamant måste ha en längd, bredd och höjd för att existera, och därför kan inte någon av dessa dimensioner vara 0.
@@ -407,8 +431,8 @@ Datakvalitet: Datasetet innehåller extremvärden och saknade värden som kan p�
     st.markdown("**Insikt:** Datasetet är relativt komplett, vilket ger tillförlitliga resultat.")
     st.markdown("**Affärsmässig tolkning:** Guldfynd kan lita på datan för att fatta beslut kring lager och prissättning.")
 
-    # 8. Hypotesprövningar
-    st.header("8. Hypotesprövningar")
+    st.markdown('<a name="hypotesprovningar"></a>', unsafe_allow_html=True)
+    st.header("10. Hypotesprövningar")
     st.markdown("Syfte: Undersöka om diamanter med högre vikt (carat) har större spridning i pris än lättare diamanter. Vi delar diamanterna i två grupper: små (carat <= median) och stora (carat > median). Vi använder ett enkelt stapeldiagram för att visa prisvariationen.")
     st.markdown("**Begreppsförklaring:** Prisvariation betyder hur mycket priserna skiljer sig åt inom en grupp. Hög variation betyder att det finns både billiga och dyra diamanter i gruppen.")
     carat_median = df['carat'].median()
@@ -422,8 +446,8 @@ Datakvalitet: Datasetet innehåller extremvärden och saknade värden som kan p�
     st.markdown("**Insikt:** Priset på stora diamanter kan skilja sig mycket, beroende på andra faktorer som kvalitet och sällsynthet.")
     st.markdown("**Affärsmässig tolkning:** Guldfynd bör vara extra noga med prissättning av stora diamanter, eftersom priset kan variera mycket även inom samma viktgrupp.")
 
-    # 9. Interaktiv Analys
-    st.header("9. Interaktiv Analys")
+    st.markdown('<a name="interaktiv-analys"></a>', unsafe_allow_html=True)
+    st.header("11. Interaktiv analys")
     st.markdown("Syfte: Filtrera och analysera diamanter utifrån valda kvalitetsattribut och pris.")
     # Cut, color, clarity i rad
     col1, col2, col3 = st.columns(3)
@@ -493,8 +517,8 @@ Datakvalitet: Datasetet innehåller extremvärden och saknade värden som kan p�
     st.markdown("**Insikt:** Möjlighet att anpassa lager och inköp efter efterfrågan i olika segment.")
     st.markdown("**Affärsmässig tolkning:** Guldfynd kan använda denna analys för att optimera lager och inköp.")
 
-    # 10. Beslutsstöd: Ska vi köpa diamanten?
-    st.header("10. Beslutsstöd: Ska vi köpa diamanten?")
+    st.markdown('<a name="beslutsstod"></a>', unsafe_allow_html=True)
+    st.header("12. Beslutsstöd: Ska vi köpa diamanten?")
     st.markdown("Syfte: Hjälpa styrelsen att fatta datadrivna beslut om inköp av enskilda diamanter baserat på analysen ovan.")
 
     # Funktion för att fatta beslut om köp
@@ -555,8 +579,8 @@ Datakvalitet: Datasetet innehåller extremvärden och saknade värden som kan p�
             st.success(f"Rekommendation: {beslut}")
             st.info(f"Motivering: {motivering}")
 
-    # 11. Executive Summary och Data Storytelling
-    st.header("11. Executive Summary och Data Storytelling")
+    st.markdown('<a name="executive-summary"></a>', unsafe_allow_html=True)
+    st.header("13. Executive summary och data storytelling")
     st.markdown("""
     ### Huvudinsikter
     1. **Marknadssegmentering**
