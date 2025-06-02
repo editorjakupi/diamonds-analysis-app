@@ -1,34 +1,34 @@
 ## 🚀 Live Demo
 
-[Öppna Diamonds Analysis App på Streamlit Cloud](https://diamonds-analysis-app-uae8lqradky68cntkehd8j.streamlit.app/)
+[Open Diamonds Analysis App on Streamlit Cloud](https://diamonds-analysis-app-uae8lqradky68cntkehd8j.streamlit.app/)
 
 # Diamonds Analysis App
 
-En interaktiv Streamlit-app för analys av diamanter, utvecklad för Guldfynd.
+An interactive Streamlit app for diamond analysis, developed for Guldfynd.
 
 ## Installation
 
-1. Klona repot:
+1. Clone the repository:
 
 ```bash
 git clone https://github.com/editorjakupi/diamonds-analysis-app.git
 cd diamonds-analysis-app
 ```
 
-2. Skapa en virtuell miljö och aktivera den:
+2. Create a virtual environment and activate it:
 
 ```bash
 python -m venv venv
-source venv/bin/activate  # På Windows: venv\Scripts\activate
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-3. Installera beroenden:
+3. Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Kör appen lokalt
+## Run the App Locally
 
 ```bash
 streamlit run part2_data_analysis.py
@@ -36,38 +36,38 @@ streamlit run part2_data_analysis.py
 
 ## Deployment
 
-Appen är konfigurerad för deployment på Streamlit Cloud:
+The app is configured for deployment on Streamlit Cloud:
 
-1. Gå till [Streamlit Cloud](https://streamlit.io/cloud)
-2. Logga in med ditt GitHub-konto
-3. Klicka på "New app"
-4. Välj ditt repo: `editorjakupi/diamonds-analysis-app`
-5. Ange sökväg till huvudfilen: `part2_data_analysis.py`
-6. Klicka på "Deploy"
+1. Go to [Streamlit Cloud](https://streamlit.io/cloud)
+2. Log in with your GitHub account
+3. Click on "New app"
+4. Select your repository: `editorjakupi/diamonds-analysis-app`
+5. Specify the path to the main file: `part2_data_analysis.py`
+6. Click on "Deploy"
 
-## Projektstruktur
+## Project Structure
 
 ```
 diamonds-analysis-app/
-├── part2_data_analysis.py     # Huvudapplikation
-├── create_notebook.py         # Notebook-generator
-├── requirements.txt           # Projektberoenden
-├── .streamlit/               # Streamlit-konfiguration
+├── part2_data_analysis.py     # Main application
+├── create_notebook.py         # Notebook generator
+├── requirements.txt           # Project dependencies
+├── .streamlit/               # Streamlit configuration
 │   └── config.toml
 ├── diamonds_dataset/         # Dataset
 │   └── diamonds.csv
-└── README.md                 # Denna fil
+└── README.md                 # This file
 ```
 
-## Funktioner
+## Features
 
-- Interaktiv dataanalys av diamanter
-- Visualiseringar med Plotly
-- Filtrering och sökning
-- Statistik och insikter
-- Beslutsstöd för inköp
+- Interactive diamond data analysis
+- Visualizations with Plotly
+- Filtering and search
+- Statistics and insights
+- Decision support for purchasing
 
-## Teknisk stack
+## Technical Stack
 
 - Python 3.9+
 - Streamlit
