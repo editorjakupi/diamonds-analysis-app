@@ -1,77 +1,77 @@
-## 🚀 Live Demo
+## Live demo
 
-[Open Diamonds Analysis App on Streamlit Cloud](https://diamonds-analysis-app-uae8lqradky68cntkehd8j.streamlit.app/)
+[Open Diamonds Analysis on Streamlit Cloud](https://diamonds-analysis-app-uae8lqradky68cntkehd8j.streamlit.app/)
 
-# Diamonds Analysis App
+After deploying to Render, add your always-on URL here.
 
-An interactive Streamlit app for diamond analysis, developed for Guldfynd.
+# Diamonds Analysis — Guldfynd
 
-## Installation
+Interaktiv Streamlit-app för diamantanalys (kunskapskontroll, NBI Handlesakademin). Svensk analystext och affärsinsikter bevaras från originalprojektet.
 
-1. Clone the repository:
+## Tre sektioner (sidopanel)
+
+1. **Presentation** — bakgrund, de 4 C:na och executive summary / data storytelling.
+2. **Interactive Diamonds Analysis** — full analys (sektion 3–12): statistik, Plotly-diagram, interaktiv filtrering och beslutsstöd *Ska vi köpa diamanten?*
+3. **Upload Your Data** — ladda upp CSV eller SQLite (`.db`) och få automatisk EDA: förhandsvisning, datatyper, saknade värden, `describe`, histogram, stapeldiagram och korrelationsheatmap.
+
+## Kör lokalt
 
 ```bash
 git clone https://github.com/editorjakupi/diamonds-analysis-app.git
 cd diamonds-analysis-app
-```
-
-2. Create a virtual environment and activate it:
-
-```bash
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-3. Install dependencies:
-
-```bash
+# Windows: venv\Scripts\activate
+# macOS/Linux: source venv/bin/activate
 pip install -r requirements.txt
-```
-
-## Run the App Locally
-
-```bash
 streamlit run part2_data_analysis.py
 ```
 
-## Deployment
+## Deploy
 
-The app is configured for deployment on Streamlit Cloud:
+### Streamlit Cloud
 
-1. Go to [Streamlit Cloud](https://streamlit.io/cloud)
-2. Log in with your GitHub account
-3. Click on "New app"
-4. Select your repository: `editorjakupi/diamonds-analysis-app`
-5. Specify the path to the main file: `part2_data_analysis.py`
-6. Click on "Deploy"
+1. [Streamlit Cloud](https://streamlit.io/cloud) → **New app**
+2. Repo: `editorjakupi/diamonds-analysis-app`
+3. Main file: `part2_data_analysis.py`
+4. Deploy
 
-## Project Structure
+### Render (always-on Web Service)
 
-```
-diamonds-analysis-app/
-├── part2_data_analysis.py     # Main application
-├── create_notebook.py         # Notebook generator
-├── requirements.txt           # Project dependencies
-├── .streamlit/               # Streamlit configuration
-│   └── config.toml
-├── diamonds_dataset/         # Dataset
-│   └── diamonds.csv
-└── README.md                 # This file
+1. Skapa ny **Web Service** och koppla repot, eller använd `render.yaml` (Docker).
+2. Render sätter `PORT`; Dockerfile kör Streamlit på `0.0.0.0`.
+3. Free tier kan spinna down vid inaktivitet; uppgradera för strikt always-on.
+
+### Docker lokalt
+
+```bash
+docker build -t diamonds-analysis .
+docker run -p 8501:8501 -e PORT=8501 diamonds-analysis
 ```
 
-## Features
+Öppna http://localhost:8501
 
-- Interactive diamond data analysis
-- Visualizations with Plotly
-- Filtering and search
-- Statistics and insights
-- Decision support for purchasing
+## Projektstruktur
 
-## Technical Stack
+```
+├── part2_data_analysis.py   # Entry (Streamlit Cloud / Docker)
+├── theme.py                 # CSS + Plotly-tema
+├── data_loader.py
+├── section_presentation.py
+├── section_analysis.py
+├── section_upload.py
+├── diamonds_dataset/diamonds.csv
+├── kunskapskontroll.ipynb
+├── .streamlit/config.toml
+├── Dockerfile
+├── render.yaml
+└── requirements.txt
+```
+
+## Stack
 
 - Python 3.9+
 - Streamlit
-- Pandas
+- Pandas, NumPy, SciPy
 - Plotly
-- Scikit-learn
-- NumPy
+
+Committa aldrig `.env` eller andra hemligheter.

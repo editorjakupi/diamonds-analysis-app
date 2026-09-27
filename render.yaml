@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: diamonds-analysis
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: PORT
+        value: 8501
+    healthCheckPath: /
+    autoDeploy: true
