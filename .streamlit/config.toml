@@ -1,0 +1,26 @@
+# Light theme defaults (charcoal text, ivory surfaces, gold accent).
+# Dark mode: users can switch via Streamlit menu (Settings → Theme);
+# custom CSS in theme.py uses [data-theme="dark"] for matching variables.
+
+[theme]
+primaryColor = "#C4A35A"
+backgroundColor = "#FAF8F5"
+secondaryBackgroundColor = "#F0EDE8"
+textColor = "#1C1C1E"
+font = "serif"
+
+[server]
+enableCORS = false
+enableXsrfProtection = true
+headless = true
+
+[browser]
+gatherUsageStats = false
+
+[runner]
+magicEnabled = true
+fastReruns = true
+
+[client]
+showErrorDetails = true
+toolbarMode = "minimal"
