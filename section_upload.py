@@ -10,7 +10,7 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-from theme import apply_plotly_theme
+from theme import apply_plotly_theme, section_heading
 
 
 def _read_uploaded_dataframe(uploaded_file) -> pd.DataFrame | None:
@@ -52,7 +52,6 @@ def _show_plotly(fig):
 
 
 def render_upload_section() -> None:
-    st.title("Upload Your Data")
     st.markdown(
         "Ladda upp en **CSV**-fil eller **SQLite**-databas (.db) för automatisk explorativ dataanalys."
     )

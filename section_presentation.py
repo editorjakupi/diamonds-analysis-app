@@ -1,12 +1,16 @@
-"""Presentation: background, 4Cs, executive summary."""
+"""Presentation: bakgrund, 4Cs, executive summary + interaktiv analys (ej beslutstöd)."""
 
 from __future__ import annotations
 
 import streamlit as st
 
+from data_loader import load_diamonds_data
+from section_analysis import render_diamonds_analysis
+from theme import section_heading
+
 
 def render_presentation() -> None:
-    st.title("Presentation")
+    section_heading("Sektion", "Presentation")
     st.markdown(
         """
     ### Bakgrund
@@ -124,3 +128,6 @@ def render_presentation() -> None:
       _Fortsätt analysera data löpande för att anpassa strategin till marknadens förändringar._
     """
     )
+
+    st.markdown("---")
+    render_diamonds_analysis(load_diamonds_data())

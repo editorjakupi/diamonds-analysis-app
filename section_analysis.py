@@ -7,7 +7,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 
-from theme import apply_plotly_theme
+from theme import apply_plotly_theme, section_heading
 
 
 def _show(fig):
@@ -16,8 +16,12 @@ def _show(fig):
 
 
 def render_diamonds_analysis(df: pd.DataFrame) -> None:
-    st.title("💎 Interactive Diamonds Analysis")
-    st.markdown("Fullständig analys av diamantdatasetet — sektionerna 3–12 från kunskapskontrollen.")
+    """Interactive analysis (sections 3–11). Beslutstöd lives in its own nav section."""
+    section_heading("Analys", "Interaktiv diamanteranalys")
+    st.markdown(
+        "Fullständig analys av diamantdatasetet — statistik, visualiseringar och filter. "
+        "Beslutstöd för enskilda köp finns i sektionen **Beslutstöd**."
+    )
     st.header("3. Grundläggande statistik")
     st.markdown("Syfte: Ge en överblick över datasetets storlek och grundläggande egenskaper.")
     
@@ -409,66 +413,4 @@ Datakvalitet: Datasetet innehåller extremvärden och saknade värden som kan p�
     st.markdown("**Tolkning:** Filtrering ger möjlighet att analysera specifika segment och deras viktfördelning.")
     st.markdown("**Insikt:** Möjlighet att anpassa lager och inköp efter efterfrågan i olika segment.")
     st.markdown("**Affärsmässig tolkning:** Guldfynd kan använda denna analys för att optimera lager och inköp.")
-
-    st.markdown('<a name="beslutsstod"></a>', unsafe_allow_html=True)
-    st.header("12. Beslutsstöd: Ska vi köpa diamanten?")
-    st.markdown("Syfte: Hjälpa styrelsen att fatta datadrivna beslut om inköp av enskilda diamanter baserat på analysen ovan.")
-
-    # Funktion för att fatta beslut om köp
-    @st.cache_data
-    def get_reference_stats(df):
-        # Beräkna referensvärden för pris per carat per kvalitet
-        ref = df.groupby(['cut', 'color', 'clarity'])[['price', 'carat']].median().reset_index()
-        ref['price_per_carat'] = ref['price'] / ref['carat']
-        return ref
-
-    reference_stats = get_reference_stats(df)
-
-    def should_buy_diamond(carat, cut, color, clarity, price, depth, table, x, y, z, df, reference_stats):
-        # Grundläggande kontroller
-        if carat <= 0 or price <= 0 or x <= 0 or y <= 0 or z <= 0:
-            return ("Nej", "Ogiltiga värden: carat, pris och dimensioner måste vara större än 0.")
-        # Kontrollera om egenskaperna är extremvärden
-        for col, val in zip(['carat','price','depth','table','x','y','z'], [carat,price,depth,table,x,y,z]):
-            Q1 = df[col].quantile(0.25)
-            Q3 = df[col].quantile(0.75)
-            IQR = Q3 - Q1
-            if val < (Q1 - 1.5*IQR) or val > (Q3 + 1.5*IQR):
-                return ("Nej", f"{col}={val} är ett extremvärde jämfört med marknaden. Undvik köp utan manuell granskning.")
-        # Jämför pris per carat mot referens för denna kvalitet
-        ref_row = reference_stats[(reference_stats['cut']==cut) & (reference_stats['color']==color) & (reference_stats['clarity']==clarity)]
-        if not ref_row.empty:
-            ref_ppc = ref_row.iloc[0]['price_per_carat']
-            ppc = price / carat
-            if ppc > ref_ppc * 1.2:
-                return ("Nej", f"Priset per carat ({ppc:.0f} USD) är mer än 20% högre än medianen för denna kvalitet ({ref_ppc:.0f} USD). Undvik köp.")
-            elif ppc < ref_ppc * 0.7:
-                return ("Ja", f"Priset per carat ({ppc:.0f} USD) är lågt jämfört med marknaden för denna kvalitet. Möjligt fynd!")
-            else:
-                return ("Ja", f"Priset per carat ({ppc:.0f} USD) är rimligt för denna kvalitet.")
-        else:
-            return ("Nej", "Kombinationen av cut, color och clarity är ovanlig i marknaden. Kräver manuell granskning.")
-
-    # Formulär för att mata in diamantens egenskaper
-    with st.form("diamond_decision_form"):
-        st.subheader("Fatta beslut om enskild diamant")
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            carat = st.number_input('Vikt (carat)', min_value=0.01, max_value=5.0, value=0.5, step=0.01)
-            price = st.number_input('Pris (USD)', min_value=1, max_value=100000, value=3000, step=1)
-            cut = st.selectbox('Slipning (cut)', cut_order)
-        with col2:
-            color = st.selectbox('Färg (color)', color_order)
-            clarity = st.selectbox('Klarhet (clarity)', clarity_order)
-            depth = st.number_input('Djup (%)', min_value=40.0, max_value=80.0, value=61.0, step=0.1)
-        with col3:
-            table = st.number_input('Tavla (%)', min_value=40.0, max_value=100.0, value=57.0, step=0.1)
-            x = st.number_input('Längd (x, mm)', min_value=0.1, max_value=15.0, value=5.0, step=0.01)
-            y = st.number_input('Bredd (y, mm)', min_value=0.1, max_value=15.0, value=5.0, step=0.01)
-            z = st.number_input('Höjd (z, mm)', min_value=0.1, max_value=10.0, value=3.2, step=0.01)
-        submitted = st.form_submit_button("Få rekommendation")
-        if submitted:
-            beslut, motivering = should_buy_diamond(carat, cut, color, clarity, price, depth, table, x, y, z, df, reference_stats)
-            st.success(f"Rekommendation: {beslut}")
-            st.info(f"Motivering: {motivering}")
 
