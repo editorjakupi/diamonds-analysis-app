@@ -76,9 +76,9 @@ docker run -p 8501:8501 -e PORT=8501 diamonds-analysis
 
 Committa aldrig `.env` eller andra hemligheter.
 
-## Always-on
 
-- **Streamlit Cloud** hosts the live demo and auto-redeploys from `main`.
-- GitHub Action **Keep Streamlit Awake** pings the app every 10 minutes so the free tier stays reachable.
-- For dedicated always-on containers, use `Dockerfile` / `render.yaml` on Render or Railway.
+## Hosting (single, free, always reachable)
 
+**Only host:** [Streamlit Community Cloud](https://diamonds-analysis-app-uae8lqradky68cntkehd8j.streamlit.app/)
+
+A GitHub Action (`Keep Streamlit Awake`) pings the app every 10 minutes so the free tier stays awake. Do **not** also deploy to Railway/Render unless you intentionally migrate away from Streamlit Cloud.
