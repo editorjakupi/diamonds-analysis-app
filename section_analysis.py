@@ -333,9 +333,17 @@ Datakvalitet: Datasetet innehåller extremvärden och saknade värden som kan p�
     st.markdown("Syfte: Undersöka om diamanter med högre vikt (carat) har större spridning i pris än lättare diamanter. Vi delar diamanterna i två grupper: små (carat <= median) och stora (carat > median). Vi använder ett enkelt stapeldiagram för att visa prisvariationen.")
     st.markdown("**Begreppsförklaring:** Prisvariation betyder hur mycket priserna skiljer sig åt inom en grupp. Hög variation betyder att det finns både billiga och dyra diamanter i gruppen.")
     carat_median = df['carat'].median()
-    df['carat_group'] = ['Låg vikt' if c <= carat_median else 'Hög vikt' for c in df['carat']]
-    price_std = df.groupby('carat_group')['price'].std()
-    fig_var = px.bar(x=price_std.index, y=price_std.values, labels={'x': 'Viktgrupp', 'y': 'Prisvariation (std)'}, title='Prisvariation för små och stora diamanter')
+    hyp_df = df.copy()
+    hyp_df['carat_group'] = [
+        'Låg vikt' if c <= carat_median else 'Hög vikt' for c in hyp_df['carat']
+    ]
+    price_std = hyp_df.groupby('carat_group')['price'].std()
+    fig_var = px.bar(
+        x=price_std.index,
+        y=price_std.values,
+        labels={'x': 'Viktgrupp', 'y': 'Prisvariation (std)'},
+        title='Prisvariation för små och stora diamanter',
+    )
     _show(fig_var)
     st.markdown("**Diagramtyp:** Stapeldiagram (bar chart) för prisvariation.")
     st.markdown("**Hur man tolkar:** Varje stapel visar hur mycket priserna varierar inom gruppen. Hög stapel = stor variation.")
@@ -354,32 +362,73 @@ Datakvalitet: Datasetet innehåller extremvärden och saknade värden som kan p�
         selected_color = st.multiselect('Välj färgkvalitet (color)', color_order)
     with col3:
         selected_clarity = st.multiselect('Välj klarhetsgrad (clarity)', clarity_order)
-    # Sliders i layout 2-2-2-1 (från vänster till höger)
-    st.markdown("""
-        <style>
-        .stSlider > div[data-baseweb="slider"] {width: 100% !important; max-width: 300px; min-width: 200px; margin-left: 0; margin-right: auto;}
-        </style>
-        """, unsafe_allow_html=True)
     slider_cols = st.columns(4)
     with slider_cols[0]:
-        price_range = st.slider('Prisintervall (USD)', int(df['price'].min()), int(df['price'].max()), (int(df['price'].min()), int(df['price'].max())))
+        price_range = st.slider(
+            'Prisintervall (USD)',
+            int(df['price'].min()),
+            int(df['price'].max()),
+            (int(df['price'].min()), int(df['price'].max())),
+        )
         carat_min = float(df['carat'].min())
         carat_max = float(df['carat'].max())
-        carat_range = st.slider('Viktintervall (carat)', min_value=carat_min, max_value=carat_max, value=(carat_min, carat_max), step=0.01, key='carat_slider', help='Filtrera på diamantens vikt (carat)', label_visibility='visible')
+        carat_range = st.slider(
+            'Viktintervall (carat)',
+            min_value=carat_min,
+            max_value=carat_max,
+            value=(carat_min, carat_max),
+            step=0.01,
+            key='carat_slider',
+        )
     with slider_cols[1]:
         depth_min, depth_max = float(df['depth'].min()), float(df['depth'].max())
-        depth_range = st.slider('Djupintervall (depth)', min_value=depth_min, max_value=depth_max, value=(depth_min, depth_max), step=0.1, key='depth_slider', help='Filtrera på diamantens djup (%)', label_visibility='visible')
+        depth_range = st.slider(
+            'Djupintervall (depth)',
+            min_value=depth_min,
+            max_value=depth_max,
+            value=(depth_min, depth_max),
+            step=0.1,
+            key='depth_slider',
+        )
         table_min, table_max = float(df['table'].min()), float(df['table'].max())
-        table_range = st.slider('Tavlaintervall (table)', min_value=table_min, max_value=table_max, value=(table_min, table_max), step=0.1, key='table_slider', help='Filtrera på diamantens tavla (%)', label_visibility='visible')
+        table_range = st.slider(
+            'Tavlaintervall (table)',
+            min_value=table_min,
+            max_value=table_max,
+            value=(table_min, table_max),
+            step=0.1,
+            key='table_slider',
+        )
     with slider_cols[2]:
         x_min, x_max = float(df['x'].min()), float(df['x'].max())
-        x_range = st.slider('Längdintervall (x)', min_value=x_min, max_value=x_max, value=(x_min, x_max), step=0.01, key='x_slider', help='Filtrera på diamantens längd (mm)', label_visibility='visible')
+        x_range = st.slider(
+            'Längdintervall (x)',
+            min_value=x_min,
+            max_value=x_max,
+            value=(x_min, x_max),
+            step=0.01,
+            key='x_slider',
+        )
         y_min, y_max = float(df['y'].min()), float(df['y'].max())
-        y_range = st.slider('Breddintervall (y)', min_value=y_min, max_value=y_max, value=(y_min, y_max), step=0.01, key='y_slider', help='Filtrera på diamantens bredd (mm)', label_visibility='visible')
+        y_range = st.slider(
+            'Breddintervall (y)',
+            min_value=y_min,
+            max_value=y_max,
+            value=(y_min, y_max),
+            step=0.01,
+            key='y_slider',
+        )
     with slider_cols[3]:
         z_min, z_max = float(df['z'].min()), float(df['z'].max())
-        z_range = st.slider('Höjdintervall (z)', min_value=z_min, max_value=z_max, value=(z_min, z_max), step=0.01, key='z_slider', help='Filtrera på diamantens höjd (mm)', label_visibility='visible')
-    # Filtrera data baserat på valda parametrar
+        z_range = st.slider(
+            'Höjdintervall (z)',
+            min_value=z_min,
+            max_value=z_max,
+            value=(z_min, z_max),
+            step=0.01,
+            key='z_slider',
+        )
+
     filtered_df = df.copy()
     if selected_cut:
         filtered_df = filtered_df[filtered_df['cut'].isin(selected_cut)]
@@ -387,12 +436,33 @@ Datakvalitet: Datasetet innehåller extremvärden och saknade värden som kan p�
         filtered_df = filtered_df[filtered_df['color'].isin(selected_color)]
     if selected_clarity:
         filtered_df = filtered_df[filtered_df['clarity'].isin(selected_clarity)]
-    filtered_df = filtered_df[(filtered_df['price'] >= price_range[0]) & (filtered_df['price'] <= price_range[1])]
-    filtered_df = filtered_df[(filtered_df['carat'] >= carat_range[0]) & (filtered_df['carat'] <= carat_range[1])]
-    filtered_df = filtered_df[(filtered_df['depth'] >= depth_range[0]) & (filtered_df['depth'] <= depth_range[1])]
-    filtered_df = filtered_df[(filtered_df['table'] >= table_range[0]) & (filtered_df['table'] <= table_range[1])]
-    # Visa statistik och visualiseringar för filtrerad data
+    filtered_df = filtered_df[
+        (filtered_df['price'] >= price_range[0]) & (filtered_df['price'] <= price_range[1])
+    ]
+    filtered_df = filtered_df[
+        (filtered_df['carat'] >= carat_range[0]) & (filtered_df['carat'] <= carat_range[1])
+    ]
+    filtered_df = filtered_df[
+        (filtered_df['depth'] >= depth_range[0]) & (filtered_df['depth'] <= depth_range[1])
+    ]
+    filtered_df = filtered_df[
+        (filtered_df['table'] >= table_range[0]) & (filtered_df['table'] <= table_range[1])
+    ]
+    filtered_df = filtered_df[
+        (filtered_df['x'] >= x_range[0]) & (filtered_df['x'] <= x_range[1])
+    ]
+    filtered_df = filtered_df[
+        (filtered_df['y'] >= y_range[0]) & (filtered_df['y'] <= y_range[1])
+    ]
+    filtered_df = filtered_df[
+        (filtered_df['z'] >= z_range[0]) & (filtered_df['z'] <= z_range[1])
+    ]
+
     st.subheader("Statistik för valda diamanter")
+    if filtered_df.empty:
+        st.warning("Inga diamanter matchar filtren. Justera urvalet.")
+        return
+
     col1, col2, col3 = st.columns(3)
     with col1:
         st.metric("Antal diamanter", f"{len(filtered_df):,}")
@@ -400,17 +470,21 @@ Datakvalitet: Datasetet innehåller extremvärden och saknade värden som kan p�
         st.metric("Medelpris", f"${filtered_df['price'].mean():,.2f}")
     with col3:
         st.metric("Medelvikt", f"{filtered_df['carat'].mean():.2f} carat")
-    fig_filt_price = px.histogram(filtered_df, x='price', nbins=30, title='Prisfördelning (Filtrerad)')
+    fig_filt_price = px.histogram(
+        filtered_df, x='price', nbins=30, title='Prisfördelning (Filtrerad)'
+    )
     _show(fig_filt_price)
-    st.markdown("**Diagramtyp:** Histogram för prisfördelning (filtrerad data).")
-    st.markdown("**Hur man tolkar:** Visar hur priserna fördelar sig i det valda segmentet.")
-    st.markdown("**Tolkning:** Filtrering ger möjlighet att analysera specifika segment och deras prisfördelning.")
-    st.markdown("**Insikt:** Möjlighet att identifiera attraktiva segment för riktad marknadsföring.")
-    fig_filt_carat = px.histogram(filtered_df, x='carat', nbins=30, title='Viktfördelning (Filtrerad)')
+    with st.expander("Tolkning — prisfördelning"):
+        st.markdown(
+            "Histogrammet visar hur priserna fördelar sig i det valda segmentet. "
+            "Använd det för att hitta attraktiva prisnivåer för marknadsföring."
+        )
+    fig_filt_carat = px.histogram(
+        filtered_df, x='carat', nbins=30, title='Viktfördelning (Filtrerad)'
+    )
     _show(fig_filt_carat)
-    st.markdown("**Diagramtyp:** Histogram för viktfördelning (filtrerad data).")
-    st.markdown("**Hur man tolkar:** Visar hur vikterna fördelar sig i det valda segmentet.")
-    st.markdown("**Tolkning:** Filtrering ger möjlighet att analysera specifika segment och deras viktfördelning.")
-    st.markdown("**Insikt:** Möjlighet att anpassa lager och inköp efter efterfrågan i olika segment.")
-    st.markdown("**Affärsmässig tolkning:** Guldfynd kan använda denna analys för att optimera lager och inköp.")
-
+    with st.expander("Tolkning — viktfördelning"):
+        st.markdown(
+            "Viktfördelningen i det filtrerade urvalet hjälper Guldfynd att anpassa "
+            "lager och inköp efter efterfrågan i olika segment."
+        )

@@ -1,4 +1,8 @@
-"""Luxury diamond theme: in-app light/dark switch + Plotly helpers."""
+"""Luxury diamond theme: in-app light/dark + Plotly helpers.
+
+IMPORTANT: never inject <style> via st.markdown — Streamlit strips the tag and
+prints CSS as visible page text. Always use st.html.
+"""
 
 from __future__ import annotations
 
@@ -27,17 +31,23 @@ def apply_plotly_theme(fig):
     fig.update_layout(
         template=template,
         paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(18,18,20,0.55)" if is_dark else "rgba(255,252,247,0.9)",
-        font=dict(family="Cormorant Garamond, Georgia, serif", color="#f5f0e8" if is_dark else "#1a1612"),
-        title_font=dict(family="Cormorant Garamond, Georgia, serif", color="#C9A227" if is_dark else "#8B6914"),
+        plot_bgcolor="rgba(12,14,18,0.72)" if is_dark else "rgba(255,250,245,0.92)",
+        font=dict(
+            family="Fraunces, Georgia, serif",
+            color="#f4efe6" if is_dark else "#1c1410",
+        ),
+        title_font=dict(
+            family="Fraunces, Georgia, serif",
+            color="#e8c547" if is_dark else "#7a5a12",
+        ),
         colorway=["#C9A227", "#8B7355", "#5C4A32", "#D4AF37", "#A89060", "#6B5344"],
-        margin=dict(t=56, r=24, b=40, l=48),
+        margin=dict(t=56, r=28, b=44, l=52),
     )
+    fig.update_layout(modebar_remove=["lasso2d", "select2d"])
     return fig
 
 
 def render_theme_toggle() -> str:
-    """Sidebar light/dark control. Returns current theme ('light'|'dark')."""
     init_theme()
     choice = st.radio(
         "Appearance",
@@ -50,193 +60,261 @@ def render_theme_toggle() -> str:
     return st.session_state[THEME_KEY]
 
 
+def _inject_html(markup: str) -> None:
+    """Inject HTML/CSS. Prefer st.html; never st.markdown for <style>."""
+    if hasattr(st, "html"):
+        st.html(markup)
+        return
+    st.error(
+        "Streamlit ≥ 1.33 required (st.html). Upgrade so theme CSS is not shown as text."
+    )
+
+
 def inject_custom_css() -> None:
     theme = get_theme_base()
     if theme == "dark":
         vars_block = """
         :root, .stApp, [data-testid="stAppViewContainer"] {
-            --lux-bg-1: #0c0b0a;
-            --lux-bg-2: #161412;
-            --lux-surface: rgba(28, 26, 24, 0.88);
-            --lux-border: rgba(201, 162, 39, 0.38);
-            --lux-gold: #C9A227;
-            --lux-gold-soft: #a89060;
-            --lux-text: #f5f0e8;
-            --lux-muted: #b8b0a4;
-            --lux-shadow: 0 18px 48px rgba(0,0,0,0.45);
+            --lux-bg-1: #0a0908;
+            --lux-bg-2: #14110f;
+            --lux-bg-3: #1c1814;
+            --lux-surface: rgba(32, 28, 24, 0.92);
+            --lux-border: rgba(232, 197, 71, 0.32);
+            --lux-gold: #e8c547;
+            --lux-gold-soft: #c9a227;
+            --lux-text: #f4efe6;
+            --lux-muted: #b5aa9a;
+            --lux-shadow: 0 22px 56px rgba(0,0,0,0.55);
+            --lux-facet: rgba(232,197,71,0.08);
         }
         """
     else:
         vars_block = """
         :root, .stApp, [data-testid="stAppViewContainer"] {
-            --lux-bg-1: #f7f3ec;
-            --lux-bg-2: #ebe4d8;
-            --lux-surface: rgba(255, 252, 247, 0.92);
-            --lux-border: rgba(139, 105, 20, 0.28);
-            --lux-gold: #8B6914;
-            --lux-gold-soft: #C9A227;
-            --lux-text: #1a1612;
-            --lux-muted: #5c5348;
-            --lux-shadow: 0 14px 40px rgba(26, 22, 18, 0.1);
+            --lux-bg-1: #f8f4ee;
+            --lux-bg-2: #efe7da;
+            --lux-bg-3: #e4d8c6;
+            --lux-surface: rgba(255, 252, 247, 0.94);
+            --lux-border: rgba(122, 90, 18, 0.26);
+            --lux-gold: #7a5a12;
+            --lux-gold-soft: #c9a227;
+            --lux-text: #1c1410;
+            --lux-muted: #5e5348;
+            --lux-shadow: 0 18px 48px rgba(28, 20, 16, 0.12);
+            --lux-facet: rgba(201,162,39,0.1);
         }
         """
 
-    st.markdown(
+    _inject_html(
         f"""
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
         <style>
         {vars_block}
 
         .stApp {{
             background:
-              radial-gradient(ellipse 90% 55% at 50% -15%, rgba(201,162,39,0.16), transparent 55%),
-              linear-gradient(165deg, var(--lux-bg-1) 0%, var(--lux-bg-2) 48%, var(--lux-bg-1) 100%);
+              radial-gradient(ellipse 70% 45% at 12% 8%, var(--lux-facet), transparent 55%),
+              radial-gradient(ellipse 55% 40% at 88% 12%, rgba(201,162,39,0.12), transparent 50%),
+              linear-gradient(168deg, var(--lux-bg-1) 0%, var(--lux-bg-2) 42%, var(--lux-bg-3) 100%);
+            color: var(--lux-text);
         }}
 
         .block-container {{
-            padding-top: 1.25rem;
-            max-width: 1180px;
+            padding-top: 1.1rem !important;
+            padding-bottom: 3rem !important;
+            max-width: min(1320px, 96vw) !important;
         }}
 
         [data-testid="stSidebar"] {{
-            background: linear-gradient(180deg, var(--lux-bg-2), var(--lux-bg-1));
+            background:
+              linear-gradient(185deg, var(--lux-bg-3) 0%, var(--lux-bg-1) 100%);
             border-right: 1px solid var(--lux-border);
         }}
 
         [data-testid="stSidebar"] * {{
-            font-family: 'Source Sans 3', system-ui, sans-serif !important;
+            font-family: 'Outfit', system-ui, sans-serif !important;
         }}
 
-        .lux-hero {{
-            font-family: 'Cormorant Garamond', Georgia, serif;
-            font-weight: 600;
-            font-size: 2.15rem;
-            letter-spacing: 0.04em;
-            color: var(--lux-gold);
-            margin: 0 0 0.25rem 0;
-        }}
-
-        .lux-tagline {{
-            font-family: 'Source Sans 3', system-ui, sans-serif;
-            color: var(--lux-muted);
-            font-size: 1.05rem;
-            margin: 0 0 1.25rem 0;
+        [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] h3 {{
+            font-family: 'Outfit', system-ui, sans-serif !important;
+            font-size: 0.72rem !important;
+            letter-spacing: 0.16em !important;
+            text-transform: uppercase !important;
+            color: var(--lux-gold) !important;
+            font-weight: 600 !important;
         }}
 
         .lux-hero-wrap {{
-            padding: 1.35rem 1.5rem 1.5rem;
-            margin-bottom: 1.35rem;
-            border-radius: 4px;
-            background: var(--lux-surface);
-            border: 1px solid var(--lux-border);
-            box-shadow: var(--lux-shadow);
             position: relative;
             overflow: hidden;
+            padding: 2rem 2.1rem 2.15rem;
+            margin: 0 0 1.75rem 0;
+            border-radius: 2px;
+            background:
+              linear-gradient(135deg, var(--lux-surface) 0%, transparent 70%),
+              var(--lux-bg-2);
+            border: 1px solid var(--lux-border);
+            box-shadow: var(--lux-shadow);
+        }}
+
+        .lux-hero-wrap::before {{
+            content: "";
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--lux-gold-soft), transparent 85%);
         }}
 
         .lux-hero-wrap::after {{
             content: "";
             position: absolute;
-            left: 1.5rem;
-            bottom: 0;
-            width: 72px;
-            height: 2px;
-            background: linear-gradient(90deg, var(--lux-gold-soft), transparent);
+            right: -40px;
+            top: -40px;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201,162,39,0.18), transparent 68%);
+            pointer-events: none;
         }}
 
-        .lux-section {{
-            font-family: 'Cormorant Garamond', Georgia, serif !important;
-            font-size: 1.65rem !important;
-            font-weight: 600 !important;
-            color: var(--lux-text) !important;
-            margin: 2rem 0 0.85rem 0 !important;
-            padding-bottom: 0.55rem;
-            border-bottom: 1px solid var(--lux-border);
-            letter-spacing: 0.02em;
+        .lux-kicker {{
+            font-family: 'Outfit', system-ui, sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--lux-gold);
+            margin: 0 0 0.65rem 0;
+        }}
+
+        .lux-hero {{
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 600;
+            font-size: clamp(2.2rem, 4vw, 3.1rem);
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            color: var(--lux-text);
+            margin: 0 0 0.55rem 0;
+        }}
+
+        .lux-hero em {{
+            font-style: italic;
+            color: var(--lux-gold);
+            font-weight: 500;
+        }}
+
+        .lux-tagline {{
+            font-family: 'Outfit', system-ui, sans-serif;
+            color: var(--lux-muted);
+            font-size: 1.08rem;
+            max-width: 42rem;
+            line-height: 1.55;
+            margin: 0;
         }}
 
         .lux-section-label {{
             display: inline-block;
-            font-family: 'Source Sans 3', system-ui, sans-serif;
-            font-size: 0.72rem;
+            font-family: 'Outfit', system-ui, sans-serif;
+            font-size: 0.68rem;
             font-weight: 600;
-            letter-spacing: 0.14em;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
             color: var(--lux-gold);
-            margin-bottom: 0.35rem;
+            margin: 0.5rem 0 0.25rem 0;
+        }}
+
+        .lux-section {{
+            font-family: 'Fraunces', Georgia, serif !important;
+            font-size: clamp(1.55rem, 2.4vw, 1.95rem) !important;
+            font-weight: 600 !important;
+            color: var(--lux-text) !important;
+            margin: 0.15rem 0 1rem 0 !important;
+            padding-bottom: 0.65rem;
+            border-bottom: 1px solid var(--lux-border);
+            letter-spacing: -0.01em;
         }}
 
         h1, h2, h3,
         [data-testid="stMarkdownContainer"] h1,
         [data-testid="stMarkdownContainer"] h2,
         [data-testid="stMarkdownContainer"] h3 {{
-            font-family: 'Cormorant Garamond', Georgia, serif !important;
+            font-family: 'Fraunces', Georgia, serif !important;
             color: var(--lux-text) !important;
+            letter-spacing: -0.015em;
         }}
 
         [data-testid="stMarkdownContainer"] p,
         [data-testid="stMarkdownContainer"] li {{
-            font-family: 'Source Sans 3', system-ui, sans-serif;
+            font-family: 'Outfit', system-ui, sans-serif;
             color: var(--lux-text);
-            line-height: 1.65;
+            font-size: 1.02rem;
+            line-height: 1.7;
+            max-width: 68ch;
         }}
 
         div[data-testid="stMetric"] {{
             background: var(--lux-surface);
             border: 1px solid var(--lux-border);
-            border-radius: 4px;
-            padding: 0.85rem 1rem;
+            border-radius: 2px;
+            padding: 1rem 1.15rem;
             box-shadow: var(--lux-shadow);
         }}
 
         div[data-testid="stMetric"] label {{
             color: var(--lux-gold) !important;
-            font-family: 'Source Sans 3', system-ui, sans-serif !important;
-            letter-spacing: 0.04em;
+            font-family: 'Outfit', system-ui, sans-serif !important;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            font-size: 0.72rem !important;
         }}
 
         .stButton > button[kind="primary"],
         div[data-testid="stFormSubmitButton"] > button {{
-            background: linear-gradient(135deg, #C9A227 0%, #8B6914 100%) !important;
+            background: linear-gradient(135deg, #d4af37 0%, #8B6914 100%) !important;
             color: #0c0b0a !important;
             border: none !important;
-            border-radius: 4px !important;
-            font-family: 'Source Sans 3', system-ui, sans-serif !important;
+            border-radius: 2px !important;
+            font-family: 'Outfit', system-ui, sans-serif !important;
             font-weight: 600 !important;
-            letter-spacing: 0.03em;
+            letter-spacing: 0.04em;
         }}
 
-        hr {{
-            border-color: var(--lux-border) !important;
-        }}
+        hr {{ border-color: var(--lux-border) !important; }}
 
         .nav-hint {{
-            font-size: 0.82rem;
+            font-size: 0.84rem;
             color: var(--lux-muted);
-            line-height: 1.45;
+            line-height: 1.5;
+            font-family: 'Outfit', system-ui, sans-serif;
+        }}
+
+        /* Make analysis insight blocks breathe */
+        [data-testid="stVerticalBlockBorderWrapper"] {{
+            background: var(--lux-surface);
+            border: 1px solid var(--lux-border) !important;
+            border-radius: 2px;
+            box-shadow: var(--lux-shadow);
         }}
         </style>
-        """,
-        unsafe_allow_html=True,
+        """
     )
 
 
 def render_app_header() -> None:
-    st.markdown(
+    _inject_html(
         """
         <div class="lux-hero-wrap">
-          <p class="lux-hero">Guldfynd · Diamonds Intelligence</p>
-          <p class="lux-tagline">Datadriven analys för sortiment, prissättning och inköp.</p>
+          <p class="lux-kicker">Guldfynd portfolio</p>
+          <p class="lux-hero">Diamonds <em>Intelligence</em></p>
+          <p class="lux-tagline">Datadriven analys för sortiment, prissättning och inköp — från 4C till affärsbeslut.</p>
         </div>
-        """,
-        unsafe_allow_html=True,
+        """
     )
 
 
 def section_heading(label: str, title: str) -> None:
-    st.markdown(
-        f'<div class="lux-section-label">{label}</div><h2 class="lux-section">{title}</h2>',
-        unsafe_allow_html=True,
+    _inject_html(
+        f'<div class="lux-section-label">{label}</div><h2 class="lux-section">{title}</h2>'
     )

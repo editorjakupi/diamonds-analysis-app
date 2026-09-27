@@ -8,8 +8,8 @@ matplotlib
 seaborn
 plotly
 
-# Web app
-streamlit
+# Web app (st.html needed so <style> is not leaked as page text)
+streamlit>=1.33.0
 
 # Jupyter
 jupyter==1.0.0
