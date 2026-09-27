@@ -48,15 +48,18 @@ def apply_plotly_theme(fig):
 
 
 def render_theme_toggle() -> str:
+    from i18n import t
+
     init_theme()
     choice = st.radio(
-        "Appearance",
-        ["Light", "Dark"],
+        t("appearance"),
+        [t("appearance_light"), t("appearance_dark")],
         index=0 if st.session_state[THEME_KEY] == "light" else 1,
         horizontal=True,
         key="diamonds_theme_radio",
     )
-    st.session_state[THEME_KEY] = "dark" if choice == "Dark" else "light"
+    dark_label = t("appearance_dark")
+    st.session_state[THEME_KEY] = "dark" if choice == dark_label else "light"
     return st.session_state[THEME_KEY]
 
 
@@ -297,18 +300,97 @@ def inject_custom_css() -> None:
             border-radius: 2px;
             box-shadow: var(--lux-shadow);
         }}
+
+        /* Dark / light: form widgets, expanders, tabs, dataframes */
+        .stTextInput input, .stNumberInput input, .stTextArea textarea,
+        [data-baseweb="select"] > div, [data-baseweb="input"] input,
+        .stSelectbox div[data-baseweb="select"] > div,
+        .stMultiSelect div[data-baseweb="select"] > div {{
+            background-color: var(--lux-surface) !important;
+            color: var(--lux-text) !important;
+            border-color: var(--lux-border) !important;
+        }}
+        label, .stMarkdown, .stCaption, [data-testid="stWidgetLabel"] p,
+        [data-testid="stRadio"] label, [data-testid="stCheckbox"] label {{
+            color: var(--lux-text) !important;
+        }}
+        [data-testid="stExpander"] details,
+        [data-testid="stExpander"] summary {{
+            background: var(--lux-surface) !important;
+            color: var(--lux-text) !important;
+            border-color: var(--lux-border) !important;
+        }}
+        [data-testid="stDataFrame"], [data-testid="stTable"] {{
+            background: var(--lux-surface) !important;
+            color: var(--lux-text) !important;
+        }}
+        .stTabs [data-baseweb="tab-list"] {{
+            background: transparent !important;
+            gap: 0.35rem;
+        }}
+        .stTabs [data-baseweb="tab"] {{
+            color: var(--lux-muted) !important;
+            background: var(--lux-surface) !important;
+            border-radius: 2px !important;
+        }}
+        .stTabs [aria-selected="true"] {{
+            color: var(--lux-gold) !important;
+            border-bottom: 2px solid var(--lux-gold) !important;
+        }}
+        div[data-testid="stSidebar"] .stRadio label span {{
+            color: var(--lux-text) !important;
+        }}
+        [data-testid="stFileUploader"] section {{
+            background: var(--lux-surface) !important;
+            border-color: var(--lux-border) !important;
+            color: var(--lux-text) !important;
+        }}
+        .stSlider [data-baseweb="slider"] {{
+            color: var(--lux-text) !important;
+        }}
+
+        @media (max-width: 768px) {{
+            .block-container {{
+                padding-left: 0.85rem !important;
+                padding-right: 0.85rem !important;
+                max-width: 100% !important;
+            }}
+            .lux-hero-wrap {{
+                padding: 1.25rem 1.1rem 1.35rem;
+                margin-bottom: 1.1rem;
+            }}
+            .lux-hero {{
+                font-size: clamp(1.7rem, 8vw, 2.3rem);
+            }}
+            .lux-tagline {{
+                font-size: 0.95rem;
+            }}
+            [data-testid="stSidebar"] {{
+                min-width: min(100vw, 18rem);
+            }}
+            div[data-testid="stHorizontalBlock"] {{
+                flex-wrap: wrap !important;
+            }}
+            .stButton > button {{
+                min-height: 44px !important;
+                width: 100%;
+            }}
+        }}
         </style>
         """
     )
 
 
-def render_app_header() -> None:
+def render_app_header(kicker: str | None = None, title_html: str | None = None, tagline: str | None = None) -> None:
+    kicker = kicker or "Guldfynd portfolio"
+    title_html = title_html or 'Diamonds <em>Intelligence</em>'
+    tagline = tagline or "Datadriven analys för sortiment, prissättning och inköp — från 4C till affärsbeslut."
     _inject_html(
-        """
+        f"""
         <div class="lux-hero-wrap">
-          <p class="lux-kicker">Guldfynd portfolio</p>
-          <p class="lux-hero">Diamonds <em>Intelligence</em></p>
-          <p class="lux-tagline">Datadriven analys för sortiment, prissättning och inköp — från 4C till affärsbeslut.</p>
+          <p class="lux-kicker">{kicker}</p>
+          <p class="lux-hero">{title_html}</p>
+          <p class="lux-tagline">{tagline}</p>
         </div>
         """
     )
