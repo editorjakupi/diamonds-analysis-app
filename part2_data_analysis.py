@@ -24,9 +24,6 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-inject_custom_css()
-inject_theme_force(get_theme_base(), accent="#d4af37", accent_fg="#0c0b0a")
-
 with st.sidebar:
     st.markdown("### Theme")
     render_theme_toggle()
@@ -49,9 +46,9 @@ with st.sidebar:
         hint = "Presentation covers background, executive summary and interactive analysis."
     st.markdown(f'<p class="nav-hint">{hint}</p>', unsafe_allow_html=True)
 
-# Re-apply after theme radio may have changed
+# Single theme inject after sidebar (avoids double-paint flash)
 inject_custom_css()
-inject_theme_force(get_theme_base(), accent="#d4af37", accent_fg="#0c0b0a")
+inject_theme_force(get_theme_base(), accent="#3d7eb0", accent_fg="#ffffff")
 
 render_app_header(
     kicker="Guldfynd portfolio",

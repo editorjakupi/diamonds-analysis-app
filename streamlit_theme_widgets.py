@@ -11,8 +11,8 @@ def streamlit_widget_theme_css(theme: str, *, prefix: str = "app") -> str:
     surface = "#1e293b" if is_dark else "#ffffff"
     surface2 = "#0f172a" if is_dark else "#f8fafc"
     border = "rgba(148,163,184,0.45)" if is_dark else "rgba(15,23,42,0.14)"
-    btn_bg = "#2dd4bf" if prefix == "telco" else "#d4af37"
-    btn_fg = "#042f2e" if prefix == "telco" else "#0c0b0a"
+    btn_bg = "#2dd4bf" if prefix == "telco" else "#3d7eb0"
+    btn_fg = "#042f2e" if prefix == "telco" else "#ffffff"
     scheme = "dark" if is_dark else "light"
 
     # Concatenate (not one huge f-string) so braces in CSS never break Python.
