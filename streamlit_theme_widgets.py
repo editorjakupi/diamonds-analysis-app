@@ -16,6 +16,55 @@ def streamlit_widget_theme_css(theme: str, *, prefix: str = "app") -> str:
     scheme = "dark" if is_dark else "light"
 
     # Concatenate (not one huge f-string) so braces in CSS never break Python.
+    # Chevron / end-enhancer: dark Streamlit base left a black block + invisible arrow in light mode
+    chevron = f"""
+    .stApp, [data-testid="stAppViewContainer"], section[data-testid="stSidebar"] {{
+      color-scheme: {scheme} !important;
+    }}
+    .stApp div[data-baseweb="select"],
+    .stApp div[data-baseweb="select"] > div,
+    section[data-testid="stSidebar"] div[data-baseweb="select"],
+    section[data-testid="stSidebar"] div[data-baseweb="select"] > div {{
+      background-color: {surface} !important;
+      background-image: none !important;
+      color: {text} !important;
+      color-scheme: {scheme} !important;
+      border-color: {border} !important;
+    }}
+    .stApp div[data-baseweb="select"] > div > *,
+    .stApp div[data-baseweb="select"] > div > div,
+    .stApp div[data-baseweb="select"] > div > div > div,
+    section[data-testid="stSidebar"] div[data-baseweb="select"] > div > *,
+    section[data-testid="stSidebar"] div[data-baseweb="select"] > div > div {{
+      background-color: {surface} !important;
+      background-image: none !important;
+      color: {text} !important;
+      -webkit-text-fill-color: {text} !important;
+      box-shadow: none !important;
+    }}
+    .stApp div[data-baseweb="select"] svg,
+    .stApp div[data-baseweb="select"] svg *,
+    .stApp div[data-baseweb="select"] path,
+    section[data-testid="stSidebar"] div[data-baseweb="select"] svg,
+    section[data-testid="stSidebar"] div[data-baseweb="select"] svg *,
+    section[data-testid="stSidebar"] div[data-baseweb="select"] path {{
+      fill: {text} !important;
+      stroke: {text} !important;
+      color: {text} !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }}
+    /* Extra: if BaseWeb paints a dark end-enhancer, force it light/dark explicitly */
+    .stApp div[data-baseweb="select"] [class*="indicatorsContainer"],
+    .stApp div[data-baseweb="select"] [class*="indicatorContainer"],
+    .stApp div[data-baseweb="select"] [class*="dropdown"],
+    section[data-testid="stSidebar"] div[data-baseweb="select"] div:last-child {{
+      background: {surface} !important;
+      background-color: {surface} !important;
+      color: {text} !important;
+    }}
+    """
+
     return (
         f"""
     .stApp, [data-testid="stAppViewContainer"], [data-testid="stHeader"],
@@ -242,6 +291,7 @@ def streamlit_widget_theme_css(theme: str, *, prefix: str = "app") -> str:
       border: 1px solid {border} !important;
     }}
     """
+        + chevron
     )
 
 

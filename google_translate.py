@@ -34,6 +34,7 @@ LANGS = [
 
 LANG_LABELS = [label for _, label in LANGS]
 LANG_CODES = [code for code, _ in LANGS]
+WIDGET_KEY = "sf_google_translate_lang"
 
 
 def _boot_engine(page_language: str = "en") -> None:
@@ -46,8 +47,8 @@ def _boot_engine(page_language: str = "en") -> None:
 (function () {{
   var pageLang = {page_language_js};
   var included = {included_js};
-  function pDoc() {{ try {{ return window.parent.document; }} catch (e) {{ return null; }} }}
-  function pWin() {{ try {{ return window.parent; }} catch (e) {{ return null; }} }}
+  function pDoc() {{ try {{ return (window.top || window.parent).document; }} catch (e) {{ return null; }} }}
+  function pWin() {{ try {{ return window.top || window.parent; }} catch (e) {{ return null; }} }}
   var doc = pDoc();
   var win = pWin();
   if (!doc || !win) return;
@@ -114,8 +115,8 @@ def _boot_engine(page_language: str = "en") -> None:
 }})();
 </script>
 """,
-        height=1,
-        width=1,
+        height=2,
+        width=2,
     )
 
 
@@ -128,8 +129,8 @@ def _set_cookie_and_reload(code: str, page_language: str = "en") -> None:
 (function () {{
   var code = {code_js};
   var pageLang = {page_language_js};
-  var doc, win;
-  try {{ doc = window.parent.document; win = window.parent; }} catch (e) {{ return; }}
+  var win, doc;
+  try {{ win = window.top || window.parent; doc = win.document; }} catch (e) {{ return; }}
   var host = (win.location && win.location.hostname) || '';
   var clear = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
   doc.cookie = clear;
@@ -137,6 +138,7 @@ def _set_cookie_and_reload(code: str, page_language: str = "en") -> None:
     doc.cookie = clear + '; domain=' + host;
     doc.cookie = clear + '; domain=.' + host;
   }}
+  var url = new URL(win.location.href);
   if (code) {{
     var value = '/' + pageLang + '/' + code;
     doc.cookie = 'googtrans=' + value + '; path=/';
@@ -144,16 +146,18 @@ def _set_cookie_and_reload(code: str, page_language: str = "en") -> None:
       doc.cookie = 'googtrans=' + value + '; path=/; domain=' + host;
       doc.cookie = 'googtrans=' + value + '; path=/; domain=.' + host;
     }}
-    win.location.hash = 'googtrans(' + pageLang + '|' + code + ')';
+    url.searchParams.set('lang', code);
+    url.hash = 'googtrans(' + pageLang + '|' + code + ')';
   }} else {{
-    win.location.hash = '';
+    url.searchParams.delete('lang');
+    url.hash = '';
   }}
-  win.location.reload();
+  win.location.replace(url.toString());
 }})();
 </script>
 """,
-        height=1,
-        width=1,
+        height=2,
+        width=2,
     )
 
 
@@ -165,28 +169,22 @@ def render_translate_sidebar(page_language: str = "en", *, theme: Optional[str] 
     st.markdown("### Translate")
     st.caption("Google Translate · page language")
 
-    qp = st.query_params
-    current = ""
-    if "lang" in qp:
-        current = str(qp.get("lang") or "")
+    current = str(st.query_params.get("lang", "") or "")
     if current not in LANG_CODES:
         current = ""
 
-    idx = LANG_CODES.index(current) if current in LANG_CODES else 0
+    label_for_current = LANG_LABELS[LANG_CODES.index(current)]
+    if st.session_state.get(WIDGET_KEY) != label_for_current:
+        st.session_state[WIDGET_KEY] = label_for_current
+
     choice = st.selectbox(
         "Translate page",
         LANG_LABELS,
-        index=idx,
-        key="sf_google_translate_lang",
+        key=WIDGET_KEY,
         help="Choose a language — the page reloads with Google Translate.",
     )
     code = LANG_CODES[LANG_LABELS.index(choice)]
 
     if code != current:
-        if code:
-            st.query_params["lang"] = code
-        elif "lang" in st.query_params:
-            del st.query_params["lang"]
         _set_cookie_and_reload(code, page_language=page_language)
-        st.info("Applying translation…")
-        st.stop()
+        st.caption("Switching language…")
