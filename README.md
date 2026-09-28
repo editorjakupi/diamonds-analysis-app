@@ -1,6 +1,8 @@
 # Diamonds Analysis — Guldfynd
 
-**Live:** [Streamlit Cloud](https://diamonds-analysis-app-uae8lqradky68cntkehd8j.streamlit.app/)
+**Live:** [https://diamonds.editorjakupi.com](https://diamonds.editorjakupi.com)  
+**Repo:** [github.com/editorjakupi/diamonds-analysis-app](https://github.com/editorjakupi/diamonds-analysis-app)  
+**Hosting:** Hetzner CX23 `apps-nbg1` (`23.88.100.144`) — Streamlit in Docker behind shared Caddy + Let’s Encrypt
 
 Interactive Streamlit app for diamond assortment / pricing analysis (NBI course project).
 
@@ -31,10 +33,21 @@ streamlit run part2_data_analysis.py
 
 ---
 
-## Deploy
+## Deploy (Hetzner)
 
-**Streamlit Cloud:** main file `part2_data_analysis.py`  
-**Render:** see `render.yaml` / Docker
+Production path: `/opt/diamonds` on `apps-nbg1`, container `diamonds-prod-app` on Docker network `deploy_gematrior`. Caddy serves `diamonds.editorjakupi.com`.
+
+```bash
+# on VPS
+cd /opt/diamonds
+docker compose up -d --build
+docker exec gematrior-prod-caddy caddy reload --config /etc/caddy/Caddyfile
+curl -sI https://diamonds.editorjakupi.com/ | head -5
+```
+
+Compose service **must not** be named `app` (that alias collides with Gematrior on the shared network). See `docker-compose.yml`.
+
+Streamlit Community Cloud hosting for this app has been **removed**; GitHub remains the source repo.
 
 ---
 

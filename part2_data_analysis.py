@@ -46,7 +46,7 @@ with st.sidebar:
         hint = "Decision support helps with assortment, pricing and purchasing from the data."
     elif section == NAV_UPLOAD:
         hint = "Upload your own diamond data and run the same analyses on your file."
-    else:
+            else:
         hint = "Presentation covers background, executive summary and interactive analysis."
     st.markdown(f'<p class="nav-hint">{hint}</p>', unsafe_allow_html=True)
 
@@ -64,6 +64,6 @@ if section == NAV_PRESENTATION:
     render_presentation()
 elif section == NAV_DECISION:
     render_decision_support(load_diamonds_data())
-else:
+        else:
     section_heading("Section", NAV_UPLOAD)
     render_upload_section()
