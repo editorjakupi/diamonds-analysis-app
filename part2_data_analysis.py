@@ -5,7 +5,8 @@ from __future__ import annotations
 import streamlit as st
 
 from data_loader import load_diamonds_data
-from i18n import render_lang_toggle, t
+from google_translate import inject_google_translate
+from i18n import hint_for_section, render_lang_toggle, t
 from section_decision import render_decision_support
 from section_presentation import render_presentation
 from section_upload import render_upload_section
@@ -19,6 +20,9 @@ st.set_page_config(
 )
 
 with st.sidebar:
+    st.markdown(f"### {t('translate_title')}")
+    inject_google_translate(page_language="sv")
+    st.markdown("---")
     st.markdown(f"### {t('lang_title')}")
     render_lang_toggle()
     st.markdown("---")
@@ -33,7 +37,10 @@ with st.sidebar:
     st.markdown(f"### {t('theme_title')}")
     render_theme_toggle()
     st.markdown("---")
-    st.markdown(f'<p class="nav-hint">{t("nav_hint")}</p>', unsafe_allow_html=True)
+    st.markdown(
+        f'<p class="nav-hint">{hint_for_section(section)}</p>',
+        unsafe_allow_html=True,
+    )
 
 inject_custom_css()
 render_app_header(kicker=t("kicker"), title_html=t("hero_title"), tagline=t("tagline"))

@@ -6,6 +6,8 @@ prints CSS as visible page text. Always use st.html.
 
 from __future__ import annotations
 
+from typing import Optional
+
 import streamlit as st
 
 THEME_KEY = "diamonds_ui_theme"
@@ -349,6 +351,46 @@ def inject_custom_css() -> None:
             color: var(--lux-text) !important;
         }}
 
+        /* Force BaseWeb / Streamlit internals in dark mode */
+        .stApp, [data-testid="stAppViewContainer"],
+        [data-testid="stHeader"], section[data-testid="stSidebar"] {{
+            color: var(--lux-text) !important;
+            color-scheme: { "dark" if theme == "dark" else "light" };
+        }}
+        div[data-baseweb="base-input"],
+        div[data-baseweb="select"] > div,
+        div[data-baseweb="input"],
+        .stNumberInput div[data-baseweb="input"] > div,
+        input, textarea, select {{
+            background-color: var(--lux-surface) !important;
+            color: var(--lux-text) !important;
+            -webkit-text-fill-color: var(--lux-text) !important;
+            caret-color: var(--lux-text) !important;
+            border-color: var(--lux-border) !important;
+        }}
+        [data-baseweb="popover"] ul,
+        [data-baseweb="menu"],
+        [role="listbox"],
+        [data-baseweb="popover"] li {{
+            background-color: var(--lux-bg-2) !important;
+            color: var(--lux-text) !important;
+        }}
+        .stAlert, [data-testid="stNotification"],
+        [data-testid="stMetricValue"],
+        [data-testid="stMetricDelta"] {{
+            color: var(--lux-text) !important;
+        }}
+        /* Google Translate chrome */
+        .goog-te-banner-frame, .skiptranslate iframe.goog-te-banner-frame {{ display: none !important; }}
+        body {{ top: 0 !important; }}
+        .goog-logo-link, .goog-te-gadget span {{ display: none !important; }}
+        .goog-te-gadget {{ font-size: 0 !important; }}
+        #google_translate_element select {{
+            font-size: 0.85rem !important;
+            min-height: 36px;
+            padding: 0.25rem 0.5rem;
+        }}
+
         @media (max-width: 768px) {{
             .block-container {{
                 padding-left: 0.85rem !important;
@@ -381,7 +423,11 @@ def inject_custom_css() -> None:
     )
 
 
-def render_app_header(kicker: str | None = None, title_html: str | None = None, tagline: str | None = None) -> None:
+def render_app_header(
+    kicker: Optional[str] = None,
+    title_html: Optional[str] = None,
+    tagline: Optional[str] = None,
+) -> None:
     kicker = kicker or "Guldfynd portfolio"
     title_html = title_html or 'Diamonds <em>Intelligence</em>'
     tagline = tagline or "Datadriven analys för sortiment, prissättning och inköp — från 4C till affärsbeslut."
