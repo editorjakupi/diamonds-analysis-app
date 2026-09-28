@@ -6,6 +6,7 @@ IMPORTANT: never inject <style> via st.html alone — it sandboxes. Use parent i
 from __future__ import annotations
 
 from typing import Optional
+from urllib.parse import quote
 
 import streamlit as st
 
@@ -48,6 +49,12 @@ DIAMOND_SVG = """
   <line x1="140" y1="52" x2="100" y2="208" stroke="#fff" stroke-opacity="0.15" stroke-width="1"/>
 </svg>
 """
+
+
+def _diamond_data_uri() -> str:
+    """SVG diamond as a CSS-safe data URI (no HTML sanitizer involved)."""
+    svg = DIAMOND_SVG.replace('class="lux-diamond" ', "").strip()
+    return "data:image/svg+xml;utf8," + quote(svg, safe="")
 
 
 def init_theme() -> str:
@@ -137,32 +144,67 @@ def inject_custom_css() -> None:
   color: var(--lux-text) !important;
 }
 .block-container { padding-top: 1.1rem !important; padding-bottom: 3rem !important; max-width: min(1320px, 96vw) !important; }
+[data-testid="stHeader"] { background: transparent !important; }
+[data-testid="stHeader"] button, [data-testid="stHeader"] span,
+[data-testid="stSidebarCollapsedControl"] button, [data-testid="stSidebarCollapsedControl"] span,
+[data-testid="stSidebarCollapseButton"] button, [data-testid="stSidebarCollapseButton"] span {
+  color: var(--lux-text) !important; -webkit-text-fill-color: var(--lux-text) !important;
+}
 [data-testid="stSidebar"] {
   background: linear-gradient(185deg, var(--lux-bg-3) 0%, var(--lux-bg-1) 100%);
   border-right: 1px solid var(--lux-border);
 }
-[data-testid="stSidebar"] *,
 [data-testid="stSidebar"] label,
 [data-testid="stSidebar"] p,
-[data-testid="stSidebar"] span {
+[data-testid="stSidebar"] span,
+[data-testid="stSidebar"] li,
+[data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 {
   color: var(--lux-text) !important;
   -webkit-text-fill-color: var(--lux-text) !important;
   opacity: 1 !important;
-  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-family: 'Outfit', system-ui, sans-serif;
+}
+/* Never override Streamlit's icon font (shows "keyboard_double_arrow_left" as text otherwise) */
+[data-testid="stIconMaterial"],
+[data-testid="stSidebar"] [data-testid="stIconMaterial"],
+.material-symbols-rounded,
+span[class*="material-symbols"],
+[data-testid="stSidebarCollapseButton"] *,
+[data-testid="stExpanderToggleIcon"],
+[data-testid="stSidebarCollapsedControl"] * {
+  font-family: 'Material Symbols Rounded' !important;
+  font-weight: normal !important;
+  font-style: normal !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  -webkit-font-feature-settings: 'liga' !important;
+  font-feature-settings: 'liga' !important;
+  -webkit-font-smoothing: antialiased;
 }
 .lux-hero-wrap {
   position: relative; overflow: hidden; padding: 2rem 2.1rem 2.15rem; margin: 0 0 1.75rem 0;
   border-radius: 4px; background: linear-gradient(135deg, var(--lux-surface) 0%, transparent 70%), var(--lux-bg-2);
   border: 1px solid var(--lux-border); box-shadow: var(--lux-shadow);
-  min-height: 11rem;
+  min-height: 12rem;
 }
-.lux-hero-inner { position: relative; z-index: 2; max-width: min(36rem, 70%); }
-.lux-diamond {
-  position: absolute; right: -1.5rem; top: 50%; transform: translateY(-50%);
-  width: clamp(140px, 22vw, 220px); height: auto; z-index: 1; pointer-events: none;
-  filter: drop-shadow(0 12px 28px rgba(15, 61, 102, 0.35));
-  opacity: 0.95;
+.lux-hero-inner { position: relative; z-index: 2; max-width: min(36rem, 68%); }
+/* Big diamond — CSS background so no HTML sanitizer can strip it */
+.lux-hero-wrap::after {
+  content: ""; position: absolute; z-index: 1; pointer-events: none;
+  right: 1.25rem; top: 50%; transform: translateY(-50%);
+  width: clamp(150px, 20vw, 240px); height: clamp(165px, 22vw, 264px);
+  background: url("__DIAMOND_URI__") no-repeat center / contain;
+  filter: drop-shadow(0 16px 32px rgba(15, 61, 102, 0.38));
 }
+/* Faint giant diamond watermark bottom-right of the app */
+.stApp { isolation: isolate; }
+.stApp::before {
+  content: ""; position: fixed; z-index: -1; pointer-events: none;
+  right: -6vw; bottom: -8vh; width: 44vw; height: 48vw; max-width: 620px; max-height: 680px;
+  background: url("__DIAMOND_URI__") no-repeat center / contain;
+  opacity: 0.18;
+}
+.lux-diamond { display: none; }
 .lux-kicker { font-family: 'Outfit', system-ui, sans-serif; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--lux-gold); margin: 0 0 0.65rem 0; }
 .lux-hero { font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: clamp(2.2rem, 4vw, 3.1rem); color: var(--lux-text); margin: 0 0 0.55rem 0; }
 .lux-hero em { font-style: italic; color: var(--lux-gold); font-weight: 500; }
@@ -198,6 +240,7 @@ div[data-testid="stMetric"] label,
   .stButton > button { min-height: 44px !important; width: 100%; }
 }
 """
+    base = base.replace("__DIAMOND_URI__", _diamond_data_uri())
     inject_parent_css(
         "@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600&display=swap');\n"
         + vars_block
@@ -227,7 +270,6 @@ def render_app_header(
             <p class="lux-hero">{title_html}</p>
             <p class="lux-tagline">{tagline}</p>
           </div>
-          {DIAMOND_SVG}
         </div>
         """
     )
