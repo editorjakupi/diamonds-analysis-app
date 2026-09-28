@@ -10,6 +10,7 @@ from section_decision import render_decision_support
 from section_presentation import render_presentation
 from section_upload import render_upload_section
 from streamlit_theme_force import inject_theme_force
+from streamlit_parent_inject import inject_react_dom_patch
 from theme import get_theme_base, inject_custom_css, render_app_header, render_theme_toggle, section_heading
 
 # English UI source — Google Translate handles other languages (no hardcoded i18n tables).
@@ -23,6 +24,9 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+# Patch React before Google Translate mutates the DOM (prevents removeChild crashes)
+inject_react_dom_patch()
 
 with st.sidebar:
     st.markdown("### Theme")

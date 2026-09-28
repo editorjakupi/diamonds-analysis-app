@@ -260,7 +260,7 @@ def render_app_header(
     title_html = title_html or "Diamonds <em>Intelligence</em>"
     tagline = (
         tagline
-        or "Datadriven analys för sortiment, prissättning och inköp — från 4C till affärsbeslut."
+        or "Data-driven analysis for assortment, pricing and purchasing — from the 4Cs to decisions."
     )
     _inject_html(
         f"""
