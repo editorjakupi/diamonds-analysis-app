@@ -112,7 +112,7 @@ def render_decision_support(df: pd.DataFrame) -> None:
             z = st.number_input(
                 "Höjd (z, mm)", min_value=0.1, max_value=10.0, value=3.2, step=0.01
             )
-        submitted = st.form_submit_button("Få rekommendation")
+        submitted = st.form_submit_button("Get recommendation", type="primary")
         if submitted:
             beslut, motivering = should_buy_diamond(
                 carat,

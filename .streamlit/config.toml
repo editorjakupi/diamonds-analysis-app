@@ -1,11 +1,12 @@
-# Dark base keeps Streamlit widgets readable if custom CSS inject is delayed.
+# Light base: in-app Light/Dark still overrides via parent CSS.
+# Dark base left navy steppers + invisible form buttons in light mode.
 
 [theme]
-base = "dark"
-primaryColor = "#7eb8e8"
-backgroundColor = "#070b14"
-secondaryBackgroundColor = "#152238"
-textColor = "#e8f0fa"
+base = "light"
+primaryColor = "#3d7eb0"
+backgroundColor = "#e8f2fc"
+secondaryBackgroundColor = "#ffffff"
+textColor = "#0c1a2e"
 font = "sans serif"
 
 [server]

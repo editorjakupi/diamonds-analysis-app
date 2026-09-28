@@ -133,5 +133,53 @@ div[data-testid="stMetric"],
   color: {text} !important;
   -webkit-text-fill-color: {text} !important;
 }}
+
+/* Number input steppers + select end blocks */
+.stNumberInput button,
+[data-testid="stNumberInput"] button,
+.stNumberInput div[data-baseweb="input"] > div > div:last-child,
+[data-testid="stNumberInput"] div[data-baseweb="input"] > div > div,
+div[data-baseweb="select"] > div > div:last-child {{
+  background: {surface} !important;
+  background-color: {surface} !important;
+  color: {text} !important;
+  -webkit-text-fill-color: {text} !important;
+  border-color: {border} !important;
+}}
+.stNumberInput button *,
+[data-testid="stNumberInput"] button *,
+.stNumberInput button svg,
+.stNumberInput button path,
+div[data-baseweb="select"] svg,
+div[data-baseweb="select"] path {{
+  color: {text} !important;
+  fill: {text} !important;
+  stroke: {text} !important;
+  -webkit-text-fill-color: {text} !important;
+}}
+
+/* Form submit / primary — must beat global span color rules */
+[data-testid="stFormSubmitButton"] button,
+[data-testid="stFormSubmitButton"] button *,
+[data-testid="stFormSubmitButton"] span,
+[data-testid="stFormSubmitButton"] font,
+button[data-testid="baseButton-primaryFormSubmit"],
+button[data-testid="baseButton-primaryFormSubmit"] *,
+button[data-testid="baseButton-secondaryFormSubmit"],
+button[data-testid="baseButton-secondaryFormSubmit"] *,
+[data-testid="stBaseButton-primaryFormSubmit"],
+[data-testid="stBaseButton-primaryFormSubmit"] *,
+[data-testid="stBaseButton-secondaryFormSubmit"],
+[data-testid="stBaseButton-secondaryFormSubmit"] *,
+.stButton > button[kind="primary"],
+.stButton > button[kind="primary"] * {{
+  background: {accent} !important;
+  background-color: {accent} !important;
+  color: {accent_fg} !important;
+  -webkit-text-fill-color: {accent_fg} !important;
+  border: none !important;
+  opacity: 1 !important;
+  font-weight: 600 !important;
+}}
 """
     inject_parent_css(css, style_id="sf-theme-force-style")

@@ -58,10 +58,16 @@ def streamlit_widget_theme_css(theme: str, *, prefix: str = "app") -> str:
     .stApp div[data-baseweb="select"] [class*="indicatorsContainer"],
     .stApp div[data-baseweb="select"] [class*="indicatorContainer"],
     .stApp div[data-baseweb="select"] [class*="dropdown"],
+    .stApp div[data-baseweb="select"] > div > div:last-child,
+    .stApp div[data-baseweb="select"] > div > div:last-child > div,
+    .stApp div[data-baseweb="input"] > div > div:last-child,
+    .stApp div[data-baseweb="base-input"] > div > div:last-child,
     section[data-testid="stSidebar"] div[data-baseweb="select"] div:last-child {{
       background: {surface} !important;
       background-color: {surface} !important;
+      background-image: none !important;
       color: {text} !important;
+      box-shadow: none !important;
     }}
     """
 
@@ -234,14 +240,82 @@ def streamlit_widget_theme_css(theme: str, *, prefix: str = "app") -> str:
       visibility: visible !important;
     }}
 
-    .stApp .stButton > button {{
+    /* Number steppers: dark Streamlit base paints a navy end-block in light mode */
+    .stApp .stNumberInput button,
+    .stApp [data-testid="stNumberInput"] button,
+    .stApp [data-testid="stNumberInputContainer"] button,
+    .stApp .stNumberInput [data-baseweb="button"],
+    .stApp .stNumberInput div[data-baseweb="input"] button,
+    .stApp .stNumberInput div[data-baseweb="base-input"] > div > div,
+    .stApp .stNumberInput div[data-baseweb="input"] > div > div:last-child,
+    .stApp [data-testid="stNumberInput"] div[data-baseweb="input"] > div > div {{
+      background: {surface} !important;
+      background-color: {surface} !important;
+      background-image: none !important;
       color: {text} !important;
+      -webkit-text-fill-color: {text} !important;
+      border-color: {border} !important;
+      box-shadow: none !important;
     }}
+    .stApp .stNumberInput button *,
+    .stApp [data-testid="stNumberInput"] button *,
+    .stApp .stNumberInput button svg,
+    .stApp .stNumberInput button svg *,
+    .stApp .stNumberInput button path {{
+      color: {text} !important;
+      -webkit-text-fill-color: {text} !important;
+      fill: {text} !important;
+      stroke: {text} !important;
+      opacity: 1 !important;
+    }}
+
+    /* Secondary / default buttons */
+    .stApp .stButton > button,
+    .stApp .stButton > button[kind="secondary"],
+    .stApp [data-testid="stBaseButton-secondary"],
+    .stApp button[data-testid="baseButton-secondary"] {{
+      background: {surface} !important;
+      background-image: none !important;
+      color: {text} !important;
+      -webkit-text-fill-color: {text} !important;
+      border: 1px solid {border} !important;
+    }}
+    .stApp .stButton > button *,
+    .stApp .stButton > button[kind="secondary"] *,
+    .stApp [data-testid="stBaseButton-secondary"] * {{
+      color: {text} !important;
+      -webkit-text-fill-color: {text} !important;
+    }}
+
+    /* Primary + form submit — never inherit the global dark span color */
     .stApp .stButton > button[kind="primary"],
-    .stApp .stButton > button[kind="primary"] * {{
+    .stApp .stButton > button[kind="primary"] *,
+    .stApp [data-testid="stBaseButton-primary"],
+    .stApp [data-testid="stBaseButton-primary"] *,
+    .stApp button[data-testid="baseButton-primary"],
+    .stApp button[data-testid="baseButton-primary"] *,
+    .stApp [data-testid="stFormSubmitButton"] button,
+    .stApp [data-testid="stFormSubmitButton"] button *,
+    .stApp [data-testid="stFormSubmitButton"] span,
+    .stApp [data-testid="stFormSubmitButton"] p,
+    .stApp [data-testid="stFormSubmitButton"] font,
+    .stApp button[data-testid="baseButton-primaryFormSubmit"],
+    .stApp button[data-testid="baseButton-primaryFormSubmit"] *,
+    .stApp button[data-testid="baseButton-secondaryFormSubmit"],
+    .stApp button[data-testid="baseButton-secondaryFormSubmit"] *,
+    .stApp [data-testid="stBaseButton-primaryFormSubmit"],
+    .stApp [data-testid="stBaseButton-primaryFormSubmit"] *,
+    .stApp [data-testid="stBaseButton-secondaryFormSubmit"],
+    .stApp [data-testid="stBaseButton-secondaryFormSubmit"] * {{
       background: {btn_bg} !important;
+      background-color: {btn_bg} !important;
+      background-image: none !important;
       color: {btn_fg} !important;
       -webkit-text-fill-color: {btn_fg} !important;
+      border: none !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      font-weight: 600 !important;
     }}
 
     .stApp [data-testid="stMetricValue"],
