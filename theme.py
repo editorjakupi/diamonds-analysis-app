@@ -10,6 +10,8 @@ from typing import Optional
 
 import streamlit as st
 
+from streamlit_theme_widgets import inject_widget_theme, streamlit_widget_theme_css
+
 THEME_KEY = "diamonds_ui_theme"
 
 
@@ -50,18 +52,15 @@ def apply_plotly_theme(fig):
 
 
 def render_theme_toggle() -> str:
-    from i18n import t
-
     init_theme()
     choice = st.radio(
-        t("appearance"),
-        [t("appearance_light"), t("appearance_dark")],
+        "Appearance",
+        ["Light", "Dark"],
         index=0 if st.session_state[THEME_KEY] == "light" else 1,
         horizontal=True,
         key="diamonds_theme_radio",
     )
-    dark_label = t("appearance_dark")
-    st.session_state[THEME_KEY] = "dark" if choice == dark_label else "light"
+    st.session_state[THEME_KEY] = "dark" if choice == "Dark" else "light"
     return st.session_state[THEME_KEY]
 
 
@@ -302,95 +301,9 @@ def inject_custom_css() -> None:
             border-radius: 2px;
             box-shadow: var(--lux-shadow);
         }}
-
-        /* Dark / light: form widgets, expanders, tabs, dataframes */
-        .stTextInput input, .stNumberInput input, .stTextArea textarea,
-        [data-baseweb="select"] > div, [data-baseweb="input"] input,
-        .stSelectbox div[data-baseweb="select"] > div,
-        .stMultiSelect div[data-baseweb="select"] > div {{
-            background-color: var(--lux-surface) !important;
-            color: var(--lux-text) !important;
-            border-color: var(--lux-border) !important;
-        }}
-        label, .stMarkdown, .stCaption, [data-testid="stWidgetLabel"] p,
-        [data-testid="stRadio"] label, [data-testid="stCheckbox"] label {{
-            color: var(--lux-text) !important;
-        }}
-        [data-testid="stExpander"] details,
-        [data-testid="stExpander"] summary {{
-            background: var(--lux-surface) !important;
-            color: var(--lux-text) !important;
-            border-color: var(--lux-border) !important;
-        }}
-        [data-testid="stDataFrame"], [data-testid="stTable"] {{
-            background: var(--lux-surface) !important;
-            color: var(--lux-text) !important;
-        }}
-        .stTabs [data-baseweb="tab-list"] {{
-            background: transparent !important;
-            gap: 0.35rem;
-        }}
-        .stTabs [data-baseweb="tab"] {{
-            color: var(--lux-muted) !important;
-            background: var(--lux-surface) !important;
-            border-radius: 2px !important;
-        }}
-        .stTabs [aria-selected="true"] {{
-            color: var(--lux-gold) !important;
-            border-bottom: 2px solid var(--lux-gold) !important;
-        }}
-        div[data-testid="stSidebar"] .stRadio label span {{
-            color: var(--lux-text) !important;
-        }}
-        [data-testid="stFileUploader"] section {{
-            background: var(--lux-surface) !important;
-            border-color: var(--lux-border) !important;
-            color: var(--lux-text) !important;
-        }}
-        .stSlider [data-baseweb="slider"] {{
-            color: var(--lux-text) !important;
-        }}
-
-        /* Force BaseWeb / Streamlit internals in dark mode */
-        .stApp, [data-testid="stAppViewContainer"],
-        [data-testid="stHeader"], section[data-testid="stSidebar"] {{
-            color: var(--lux-text) !important;
-            color-scheme: { "dark" if theme == "dark" else "light" };
-        }}
-        div[data-baseweb="base-input"],
-        div[data-baseweb="select"] > div,
-        div[data-baseweb="input"],
-        .stNumberInput div[data-baseweb="input"] > div,
-        input, textarea, select {{
-            background-color: var(--lux-surface) !important;
-            color: var(--lux-text) !important;
-            -webkit-text-fill-color: var(--lux-text) !important;
-            caret-color: var(--lux-text) !important;
-            border-color: var(--lux-border) !important;
-        }}
-        [data-baseweb="popover"] ul,
-        [data-baseweb="menu"],
-        [role="listbox"],
-        [data-baseweb="popover"] li {{
-            background-color: var(--lux-bg-2) !important;
-            color: var(--lux-text) !important;
-        }}
-        .stAlert, [data-testid="stNotification"],
-        [data-testid="stMetricValue"],
-        [data-testid="stMetricDelta"] {{
-            color: var(--lux-text) !important;
-        }}
-        /* Google Translate chrome */
-        .goog-te-banner-frame, .skiptranslate iframe.goog-te-banner-frame {{ display: none !important; }}
-        body {{ top: 0 !important; }}
-        .goog-logo-link, .goog-te-gadget span {{ display: none !important; }}
-        .goog-te-gadget {{ font-size: 0 !important; }}
-        #google_translate_element select {{
-            font-size: 0.85rem !important;
-            min-height: 36px;
-            padding: 0.25rem 0.5rem;
-        }}
-
+        """
+        + streamlit_widget_theme_css(theme, prefix="diamonds")
+        + f"""
         @media (max-width: 768px) {{
             .block-container {{
                 padding-left: 0.85rem !important;
@@ -421,6 +334,7 @@ def inject_custom_css() -> None:
         </style>
         """
     )
+    inject_widget_theme(theme, prefix="diamonds")
 
 
 def render_app_header(
