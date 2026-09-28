@@ -9,7 +9,8 @@ from google_translate import inject_google_translate
 from section_decision import render_decision_support
 from section_presentation import render_presentation
 from section_upload import render_upload_section
-from theme import inject_custom_css, render_app_header, render_theme_toggle, section_heading
+from streamlit_theme_force import inject_theme_force
+from theme import get_theme_base, inject_custom_css, render_app_header, render_theme_toggle, section_heading
 
 # Fixed Swedish UI labels — Google Translate handles other languages.
 NAV_PRESENTATION = "Presentation"
@@ -25,6 +26,7 @@ st.set_page_config(
 
 with st.sidebar:
     st.markdown("### Översätt")
+    st.markdown('<div id="sf-gt-slot"></div>', unsafe_allow_html=True)
     inject_google_translate(page_language="sv")
     st.markdown("---")
     st.markdown("### Navigation")
@@ -47,6 +49,7 @@ with st.sidebar:
     st.markdown(f'<p class="nav-hint">{hint}</p>', unsafe_allow_html=True)
 
 inject_custom_css()
+inject_theme_force(get_theme_base(), accent="#d4af37", accent_fg="#0c0b0a")
 render_app_header(
     kicker="Guldfynd portfolio",
     title_html="Diamonds <em>Intelligence</em>",
