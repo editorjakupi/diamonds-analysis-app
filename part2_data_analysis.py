@@ -70,7 +70,7 @@ setLink('canonical', {canon});
 
 st.set_page_config(
     page_title="Diamonds Analysis — Guldfynd",
-    page_icon="💎",
+    page_icon="favicon.png",
     layout="wide",
     initial_sidebar_state="expanded",
 )
